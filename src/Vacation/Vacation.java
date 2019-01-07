@@ -4,6 +4,7 @@ package Vacation;
 import DataBase.VacationTable;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class Vacation implements Comparable<Vacation> {
     private int vacationID;
@@ -192,6 +193,9 @@ public class Vacation implements Comparable<Vacation> {
     }
 
     public boolean isAvalible() {
+        Date now = Date.valueOf(LocalDate.now());
+        isAvalible = (isAvalible && !(now.after(departureTime)));
+        setAvalible(isAvalible);
         return isAvalible;
     }
 
