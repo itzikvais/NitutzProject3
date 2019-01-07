@@ -1,0 +1,20 @@
+BorderPane{
+}
+Button{
+    -fx-border-color: lightblue;
+    -fx-border-style: solid;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-color:white;
+    -fx-border-radius: 6px;
+}
+HBox{
+    -fx-border-color: black;
+    -fx-border-style: solid;
+}
+Button:hover{
+    -fx-background-color: lightblue;
+    -fx-border-color: black;
+    -fx-border-style: dashed;
+
+}
