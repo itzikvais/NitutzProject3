@@ -18,11 +18,13 @@ public class TransactionTable extends Adb {
     private String sellerUserName;
     private int vacationID;
     private long time;
-    private String insertCommand = "INSERT INTO transactions(buyerUserName,sellerUserName,vacationID,time) VALUES(?,?,?,?)";
+    private String payment;
+    private String insertCommand = "INSERT INTO transactions(buyerUserName,sellerUserName,vacationID,time,payment) VALUES(?,?,?,?,?)";
     public TransactionTable(Transaction transaction){
         buyerUserName = transaction.getBuyer().getUsername();
         sellerUserName = transaction.getSeller().getUsername();
         vacationID = transaction.getVacation().getVacationID();
+        payment = transaction.getPayment();
         //time = transaction.getDateUnixTime();
     }
 
@@ -31,13 +33,15 @@ public class TransactionTable extends Adb {
         String sSellerUserName = transaction.getSeller().getUsername();
         int iVacationID = transaction.getVacation().getVacationID();
         java.sql.Date time = java.sql.Date.valueOf(transaction.getTime());
-        String insertCommand = "INSERT INTO transactions(buyerUserName,sellerUserName,vacationID,time) VALUES(?,?,?,?)";
+        String payment = transaction.getPayment();
+        String insertCommand = "INSERT INTO transactions(buyerUserName,sellerUserName,vacationID,time,payment) VALUES(?,?,?,?,?)";
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(insertCommand)) {
              pstmt.setString(1,sBuyerUserName);
              pstmt.setString(2,sSellerUserName);
              pstmt.setInt(3,iVacationID);
              pstmt.setDate(4,time);
+             pstmt.setString(5,payment);
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -49,7 +53,7 @@ public class TransactionTable extends Adb {
 
     }
     public List<Transaction> getAllTransactions(User user){
-        String querry = "SELECT * FROM transactions WHERE buyerUserName=? OR sellerUserName=?";
+        String querry = "SELECT buyerUserName,sellerUserName,vacationID,time,payment FROM transactions WHERE buyerUserName=? OR sellerUserName=?";
         try (Connection conn = this.connect();
              PreparedStatement pstmt  = conn.prepareStatement(querry)){
             pstmt.setString(1,user.getUsername());
@@ -76,22 +80,6 @@ public class TransactionTable extends Adb {
         }
 
         return transactions;
-    }
-    List<Transaction> getAllBoughtInLastDay(User user){
-        long time24HoursAgo = (new Date().getTime())-86400000;
-        String querry = "SELECT * FROM transactions WHERE time>?";
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt  = conn.prepareStatement(querry)){
-            pstmt.setLong(1,time24HoursAgo);
-            //
-            ResultSet rs  = pstmt.executeQuery();
-            List<Transaction> transactions = getTransactionListFromResultSet(rs);
-            return transactions;
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 
     public void cancelTransaction(Transaction t){

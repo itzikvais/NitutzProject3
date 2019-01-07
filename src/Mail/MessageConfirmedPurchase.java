@@ -41,8 +41,8 @@ public class MessageConfirmedPurchase extends Message{
                 text="purchase of vacation: "+vacation.getVacationID()+" has been rejected by user: "+seller;
                 break;
             case COMPLETEDTRANSACTION:
-                text = "purchase of vacation: "+vacation.getVacationID()+" has been completed succesfully.\n" +
-                        "User: "+buyer+"successfully purchased vacation from User: "+seller;
+                text = "purchase of vacation: "+vacation.getVacationID()+" has been completed succesfully. " +
+                        "User: "+buyer+" successfully purchased vacation from User: "+seller;
                 break;
             case FLIGHTNOTAVAILABLE:
                 text = "purchase of vacation has not been completed successfully, because flight is no longer available";
