@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -89,23 +90,31 @@ public class MailboxController {
     public void setParent(Parent p){
         this.p=p;
     }
+
     private void addMessage(Message m) {
         javafx.scene.control.Label parameters=new javafx.scene.control.Label( m.getText() );
         javafx.scene.control.Button accept = new javafx.scene.control.Button("Accept Purchase");
         javafx.scene.control.Button deny = new Button("Deny Purchase");
-        accept.setOnAction(e->handlePress(true, (MessageRequestToConfirm) m));
-        deny.setOnAction(e->handlePress(false, (MessageRequestToConfirm) m));
-        /*
-        parameters.setLayoutX(40);
-        parameters.setLayoutY( height );
-        parameters.setPrefWidth( 1000 );
-        height+=60;
-        accept.setLayoutX( 40 );
-        accept.setLayoutY( height );
-        deny.setLayoutX( 200 );
-        deny.setLayoutY( height );
-        height+=60;
-        */
+        accept.setOnAction(e->{
+            accept.setDisable(true);
+            deny.setDisable(true);
+            handlePress(true, (MessageRequestToConfirm) m);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("You chose to accept the sale of the vacation");
+            alert.setHeaderText("Check your mail-box for confirmation");
+            alert.setContentText("");
+            alert.showAndWait();
+        });
+        deny.setOnAction(e->{
+            accept.setDisable(true);
+            deny.setDisable(true);
+            handlePress(false, (MessageRequestToConfirm) m);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("You chose to deny the sale of the vacation");
+            alert.setHeaderText("");
+            alert.setContentText("");
+            alert.showAndWait();
+        });
         HBox hb=null;
         if(m instanceof MessageRequestToConfirm&&!m.isRead() ){
             hb= new HBox( parameters,accept,deny );
@@ -138,7 +147,6 @@ public class MailboxController {
         this.group=null;
         setMessages(mailbox.getMessages());
     }
-
     public void setStage(Stage stage) {
         this.stage=stage;
     }
