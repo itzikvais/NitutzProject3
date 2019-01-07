@@ -13,6 +13,13 @@ public class Model extends Observable implements ModelInt {
     Controller controller;
     private User user;
     private Vacation vacationToBuy;
+
+    public void setVacationToTrade(Vacation vacationToTrade) {
+        this.vacationToTrade = vacationToTrade;
+    }
+
+    private Vacation vacationToTrade;
+
     public void setController(Controller controller) {
         this.controller = controller;
     }
@@ -81,6 +88,11 @@ public class Model extends Observable implements ModelInt {
     @Override
     public boolean updatePassword(User user, String oldPass, String newPass) {
         return user.updatePW( oldPass,newPass );
+    }
+
+    @Override
+    public Vacation getVacationToTrade() {
+        return this.vacationToTrade;
     }
 
 }

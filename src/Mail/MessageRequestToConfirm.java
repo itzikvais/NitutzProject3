@@ -11,6 +11,7 @@ import java.util.List;
 public class MessageRequestToConfirm extends Message{
 
     Vacation vacationToConfirm;
+    Vacation vacationToTrade;
     public boolean haveResponded=false;
 
 
@@ -27,6 +28,13 @@ public class MessageRequestToConfirm extends Message{
     public MessageRequestToConfirm(Vacation vacation){
         super();
         this.vacationToConfirm = vacation;
+        haveResponded=false;
+    }
+
+    public MessageRequestToConfirm(Vacation vacation, Vacation vacationToTrade) {
+        super();
+        this.vacationToConfirm = vacation;
+        this.vacationToTrade=vacationToTrade;
         haveResponded=false;
     }
 
@@ -74,11 +82,15 @@ public class MessageRequestToConfirm extends Message{
 
     @Override
     public String getText() {
-        if(haveResponded && vacationToConfirm.isAvalible()){
+        if(isRead && vacationToConfirm.isAvalible()){
             return "You can no longer confirm sale of message. The vacation may no longer be available or you have already responded to this message";
         }
-        else {
+        else if(vacationToTrade!=null) {
             return "User: "+getUserNameFrom()+" wants to purchase vacation:" + vacationToConfirm.getVacationID()+"\n" +
+                    "Choose your response";
+        }
+        else{
+            return "User: "+getUserNameFrom()+" wants to trade vacation:" + vacationToConfirm.getVacationID()+"for -"+vacationToTrade.getVacationID()+"\n" +
                     "Choose your response";
         }
     }

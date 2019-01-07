@@ -164,7 +164,7 @@ public class ShowVacationsController {
         Button vacations = new Button("buy vacation");
         vacations.setOnAction( e->payment(v) );
         Button contact = new Button("trade vacation");
-        contact.setOnAction( e->contactSeller(v.getSeller()) );
+        contact.setOnAction( e->tradeVacations(v) );
         HBox hb= new HBox(  );
         hb.setSpacing( 10 );
         hb.setMargin( parameters, new Insets(20, 20, 20, 20) );
@@ -186,12 +186,38 @@ public class ShowVacationsController {
 
     }
 
-    private void contactSeller(String seller) {
+    private void tradeVacations(Vacation vacation) {
         if(myModel.getUser()==null){
             Alert alert=new Alert( Alert.AlertType.WARNING );
             alert.setContentText( "you need to log in before contact seller" );
             alert.showAndWait();
         }
+        else{
+            try{
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/MyVacation.fxml"));
+                Parent root1 = (Parent) fxmlLoader.load();
+                MyVacationsController vacationsController=fxmlLoader.getController();
+                Stage stage = new Stage();
+                stage.initModality( Modality.APPLICATION_MODAL);
+                stage.initStyle( StageStyle.UNDECORATED);
+                stage.setTitle("my vacations");
+                vacationsController.setMyModel( myModel );
+                vacationsController.setToTrade(true,vacation);
+                vacationsController.setStage(stage,root1);
+                vacationsController.setVacations(myModel.getUser().getUsername());
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    public void handle(WindowEvent windowEvent) {
+                        windowEvent.consume();
+                        stage.close();
+                    }
+                });
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     private void payment(Vacation vacation) {
