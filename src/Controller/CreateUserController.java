@@ -81,8 +81,8 @@ public class CreateUserController {
             result.showAndWait();
             return false;
         }
-        else if(password.length()<1){
-            result.setContentText( "please enter a password" );
+        else if(password.length()<4){
+            result.setContentText( "password must contain at least 4 characters" );
             result.showAndWait();
             return false;
         }

@@ -215,9 +215,12 @@ public class Vacation implements Comparable<Vacation> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append( "vacationID: " );
+        sb.append( vacationID );
+        sb.append(", ");
         sb.append("seller: ");
         sb.append(sellerName);
-        sb.append(", ");
+        sb.append("\n");
         sb.append("country of origin: ");
         sb.append(fromCountry);
         sb.append(",  ");
