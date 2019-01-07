@@ -4,6 +4,7 @@ package Vacation;
 import DataBase.VacationTable;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class Vacation implements Comparable<Vacation> {
     private int vacationID;
@@ -107,6 +108,37 @@ public class Vacation implements Comparable<Vacation> {
         }
     }
 
+    public Vacation(int vacationID) {
+        VacationTable vacationTableEntry = new VacationTable();
+        String querry = "SELECT vacationID,seller,aviationCompany,departureTime,launchTime,backDepartureTime,backLaunchTime,baggage,tickets,fromCountry,destinationCountry,ticketType,price,avalible FROM vacations WHERE  vacationID = ?;";
+        try (Connection conn = vacationTableEntry.connect();
+             PreparedStatement pstmt  = conn.prepareStatement(querry)){
+            pstmt.setInt(1,vacationID);
+            //
+            ResultSet rs  = pstmt.executeQuery();
+
+            // loop through the result set
+            while (rs.next()) {
+                this.vacationID= rs.getInt("vacationID");
+                this.sellerName=rs.getString("seller");
+                this.aviationCompany=rs.getString("aviationCompany");
+                this.departureTime=rs.getDate("departureTime");
+                this.launchTime=rs.getDate("launchTime");
+                if (backDepartureTime != null) this.backDepartureTime=rs.getDate("backDepartureTime");
+                if (backLaunchTime != null) this.backLaunchTime=rs.getDate("backLaunchTime");
+                this.baggage=rs.getInt("baggage");
+                this.tickets=rs.getInt("tickets");
+                this.fromCountry=rs.getString("fromCountry");
+                this.destinationCountry=rs.getString("destinationCountry");
+                this.ticketType=rs.getString("ticketType");
+                this.price=rs.getDouble("price");
+                if(rs.getInt("avalible") == 0) this.isAvalible = false;
+                else this.isAvalible = true;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     /* getters */
     public int getVacationID() {
         return vacationID;
@@ -161,6 +193,9 @@ public class Vacation implements Comparable<Vacation> {
     }
 
     public boolean isAvalible() {
+        Date now = Date.valueOf(LocalDate.now());
+        isAvalible = (isAvalible && !(now.after(departureTime)));
+        setAvalible(isAvalible);
         return isAvalible;
     }
 
