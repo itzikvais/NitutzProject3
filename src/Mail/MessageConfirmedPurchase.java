@@ -77,7 +77,7 @@ public class MessageConfirmedPurchase extends Message{
         text.add(getText());
         String toReturn = "";
         for (int i = 0; i < text.size(); i++) {
-            toReturn+=text.get(1)+'\n';
+            toReturn+=text.get(i)+'\n';
         }
         toReturn = toReturn.substring(0,toReturn.length()-1);
         return toReturn;

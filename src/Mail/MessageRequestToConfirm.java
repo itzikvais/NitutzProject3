@@ -12,7 +12,6 @@ public class MessageRequestToConfirm extends Message{
 
     Vacation vacationToConfirm;
     Vacation vacationToTrade;
-    public boolean haveResponded=false;
 
 
     MessageRequestToConfirm(boolean isRead, String savedText, String usernameFrom, String usernameTo, int id) {
@@ -23,27 +22,28 @@ public class MessageRequestToConfirm extends Message{
     public MessageRequestToConfirm(Vacation vacation,int id){
         super(id);
         this.vacationToConfirm = vacation;
-        haveResponded=false;
     }
     public MessageRequestToConfirm(Vacation vacation){
         super();
         this.vacationToConfirm = vacation;
-        haveResponded=false;
+        isRead=false;
     }
 
     public MessageRequestToConfirm(Vacation vacation, Vacation vacationToTrade) {
-        super();
-        this.vacationToConfirm = vacation;
+        this(vacation);
         this.vacationToTrade=vacationToTrade;
-        haveResponded=false;
     }
 
     private MessageConfirmedPurchase.Type accept(){
         if(vacationToConfirm.isAvalible()){
-            Transaction transaction = Transaction.createTransaction(getFromUser(),getTo(),vacationToConfirm);
+            boolean isCash = vacationToTrade==null;
+            double payment = isCash?vacationToConfirm.getPrice():vacationToTrade.getVacationID();
+            Transaction transaction = Transaction.createTransaction(getFromUser(),getTo(),vacationToConfirm,payment,isCash);
             if(transaction==null)
                 return MessageConfirmedPurchase.Type.UNABLETOCOMPLETEPURCHASE;
             transaction.addToDataBase();
+            if(!isCash)
+                vacationToTrade.setAvalible(false);
             vacationToConfirm.setAvalible(false);
             return MessageConfirmedPurchase.Type.COMPLETEDTRANSACTION;
         }
@@ -52,9 +52,7 @@ public class MessageRequestToConfirm extends Message{
     }
 
     public void confirm(boolean action){
-        System.out.println("check");
         isRead=true;
-        haveResponded = true;
         MessageConfirmedPurchase.Type type;
         dbMessages db=new dbMessages();
         db.updateInDataBase( this );
@@ -85,7 +83,7 @@ public class MessageRequestToConfirm extends Message{
         if(isRead && vacationToConfirm.isAvalible()){
             return "You can no longer confirm sale of message. The vacation may no longer be available or you have already responded to this message";
         }
-        else if(vacationToTrade!=null) {
+        else if(vacationToTrade==null) {
             return "User: "+getUserNameFrom()+" wants to purchase vacation:" + vacationToConfirm.getVacationID()+"\n" +
                     "Choose your response";
         }
@@ -101,8 +99,15 @@ public class MessageRequestToConfirm extends Message{
     public void setTextFromSavedText(String savedText){
         List<String> splitText = new ArrayList<>();
         splitText.addAll(Arrays.asList(savedText.split("\n")));
-        String haveResponded = splitText.remove(0);
-        String vacationKeys = splitText.remove(splitText.size()-1);
+        String haveResponded = splitText.get(0);
+        String vacationKeys = splitText.get(1);
+        String tradeVacation = splitText.get(2);
+        if(tradeVacation.equals("null"))
+            vacationToTrade=null;
+        else {
+            String[] splitTradeVacation = tradeVacation.split("=");
+            vacationToTrade = new Vacation(Integer.parseInt(splitTradeVacation[1]));
+        }
 
 
         //set vacation
@@ -110,18 +115,15 @@ public class MessageRequestToConfirm extends Message{
         this.vacationToConfirm = new Vacation(vacationKeysSplit[0],Integer.parseInt(vacationKeysSplit[1]));
 
         //set have read
-        this.haveResponded = vacationToConfirm.isAvalible() && haveResponded.equals("t");
+        this.isRead = !vacationToConfirm.isAvalible() || isRead;
     }
 
-    public boolean haveResponded(){
-        haveResponded = vacationToConfirm.isAvalible() && haveResponded;
-        return haveResponded;
-    }
 
     public String getTextToSave(){
         String vacation = vacationToConfirm.getSeller()+"\t"+vacationToConfirm.getVacationID();
-        String responded = this.haveResponded ? "t" : "f";
+        String responded = this.isRead ? "t" : "f";
+        String trade = vacationToTrade==null?"null":"vacationID="+vacationToTrade.getVacationID();
 
-        return responded+"\n"+vacation;
+        return responded+"\n"+vacation+"\n"+trade;
     }
 }

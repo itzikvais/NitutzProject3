@@ -14,18 +14,21 @@ import java.time.LocalDate;
 public class Transaction {
 
 
-    private Payment payment;
+//    private Payment payment;
     private User buyer;
     private User seller;
     private Vacation vacation;
     private LocalDate time;
     private boolean isInDB = false;
+    protected double payment;
 
-    public static Transaction createTransaction(User buyer, User seller, Vacation vacation){
-        Payment payment = Payment.createPayment("thisis","asimlulation",vacation.getPrice());
-        if(payment==null)
-            return null;
-        Transaction transaction = new Transaction(buyer,seller,vacation,payment);
+
+    public static Transaction createTransaction(User buyer, User seller, Vacation vacation, double payment, boolean isCash){
+        Transaction transaction = null;
+        if(isCash)
+            transaction = new Transaction(buyer,seller,vacation,payment);
+        else
+            transaction = new TradeTransaction(buyer,seller,vacation,payment);
         vacation.setAvalible(false);
         return transaction;
     }
@@ -38,14 +41,12 @@ public class Transaction {
         this.isInDB = isInDB;
     }
 
-    private Transaction(User buyer, User seller, Vacation vacation, Payment payment){
+    protected Transaction(User buyer, User seller, Vacation vacation, double payment){
         this.buyer=buyer;
         this.seller=seller;
         this.vacation=vacation;
-        this.payment = payment;
-        //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.payment=payment;
         time = LocalDate.now();
-        System.out.println(time);
 
     }
 
@@ -109,4 +110,8 @@ public class Transaction {
 
 
     public boolean isInDB(){return isInDB;}
+
+    public String getPayment(){
+        return "cash="+payment;
+    }
 }
