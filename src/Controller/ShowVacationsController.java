@@ -162,9 +162,17 @@ public class ShowVacationsController {
     private void addVacation(Vacation v) {
         Label parameters=new Label( v.toString() );
         Button vacations = new Button("buy vacation");
-        vacations.setOnAction( e->payment(v) );
         Button contact = new Button("trade vacation");
-        contact.setOnAction( e->tradeVacations(v) );
+        vacations.setOnAction( e->{
+            vacations.setDisable( true );
+            contact.setDisable( true );
+            payment(v);
+        } );
+        contact.setOnAction( e->{
+            vacations.setDisable( true );
+            contact.setDisable( true );
+            tradeVacations(v,vacations,contact);
+        } );
         HBox hb= new HBox(  );
         hb.setSpacing( 10 );
         hb.setMargin( parameters, new Insets(20, 20, 20, 20) );
@@ -186,7 +194,7 @@ public class ShowVacationsController {
 
     }
 
-    private void tradeVacations(Vacation vacation) {
+    private MyVacationsController tradeVacations(Vacation vacation, Button buy, Button trade) {
         if(myModel.getUser()==null){
             Alert alert=new Alert( Alert.AlertType.WARNING );
             alert.setContentText( "you need to log in before contact seller" );
@@ -194,6 +202,7 @@ public class ShowVacationsController {
         }
         else{
             try{
+                myModel.setVacation( vacation );
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/MyVacation.fxml"));
                 Parent root1 = (Parent) fxmlLoader.load();
                 MyVacationsController vacationsController=fxmlLoader.getController();
@@ -205,6 +214,7 @@ public class ShowVacationsController {
                 vacationsController.setToTrade(true,vacation);
                 vacationsController.setStage(stage,root1);
                 vacationsController.setVacations(myModel.getUser().getUsername());
+                vacationsController.setButtons(buy,trade);
                 stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                     public void handle(WindowEvent windowEvent) {
                         windowEvent.consume();
@@ -212,12 +222,14 @@ public class ShowVacationsController {
                     }
                 });
                 stage.show();
+                return vacationsController;
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
 
+        return null;
     }
 
     private void payment(Vacation vacation) {
@@ -261,5 +273,9 @@ public class ShowVacationsController {
         Mailbox mailbox = Mailbox.recreateMailBox( myModel.getUser() );
         Message message = new MessageRequestToConfirm( myModel.getVacation() );
         mailbox.sendMessage( message, myModel.getVacation().getSeller() );
+        Alert alert=new Alert( Alert.AlertType.INFORMATION );
+        alert.setContentText( "your request has been sent to the seller "+ "\n"+ "check your mailbox for an answer" );
+        alert.showAndWait();
+        stage.close();
     }
 }

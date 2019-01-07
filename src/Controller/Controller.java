@@ -283,17 +283,19 @@ public class Controller implements Observer {
 
     public void getMailBox() {
         try{
-            //FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/MailBox.fxml"));
-            //Parent root1 = (Parent) fxmlLoader.load();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/MailBox.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
             MailboxController mbc=new MailboxController();
-            //mbc.setParent(root1);
+            mbc.setParent(root1);
             mbc.setUserName(myModel.getUser().getUsername());
             Stage stage = new Stage();
-            mbc.setStage(stage);
+            mbc.setStage(stage,root1);
             stage.initModality( Modality.APPLICATION_MODAL);
             stage.initStyle( StageStyle.UNDECORATED);
             stage.setTitle("my mailbox");
             mbc.setMessages();
+            if(mbc.isEmpty)
+                return;
             stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 public void handle(WindowEvent windowEvent) {
                     windowEvent.consume();

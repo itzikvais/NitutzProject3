@@ -29,7 +29,9 @@ public class MyVacationsController {
     private int height=70;
     private Parent root;
     private boolean toTrade;
-    private Object offeredVacation;
+    private Vacation offeredVacation;
+    private Button buy;
+    private Button trade;
 
     public void setMyModel(ModelInt myModel) {
         this.myModel = myModel;
@@ -44,6 +46,8 @@ public class MyVacationsController {
     private Stage stage;
 
     public void closeButtonAction() {
+        buy.setDisable( false );
+        trade.setDisable( false );
         stage.close();
     }
 
@@ -122,6 +126,10 @@ public class MyVacationsController {
         Mailbox mailbox = Mailbox.recreateMailBox( myModel.getUser() );
         Message message = new MessageRequestToConfirm( myModel.getVacation(),myModel.getVacationToTrade() );
         mailbox.sendMessage( message, myModel.getVacation().getSeller() );
+        Alert alert=new Alert( Alert.AlertType.INFORMATION );
+        alert.setContentText( "your request has been sent to the seller "+ "\n"+ "check your mailbox for an answer" );
+        alert.showAndWait();
+        stage.close();
     }
 
     public void setStage(Stage stage,Parent root) {
@@ -132,5 +140,10 @@ public class MyVacationsController {
     public void setToTrade(boolean b,Vacation v ){
         this.toTrade=b;
         this.offeredVacation=v;
+    }
+
+    public void setButtons(Button buy, Button trade) {
+        this.buy=buy;
+        this.trade =trade;
     }
 }
