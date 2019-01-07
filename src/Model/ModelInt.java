@@ -46,4 +46,8 @@ public interface ModelInt {
     boolean updateUser(User user,String email, String date, String firstName, String lastName);
 
     boolean updatePassword(User user, String oldPass, String newPass);
+
+    Vacation getVacationToTrade();
+
+    void setVacationToTrade(Vacation trade);
 }

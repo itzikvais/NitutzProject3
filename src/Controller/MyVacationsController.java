@@ -1,6 +1,9 @@
 package Controller;
 
 import DataBase.VacationTable;
+import Mail.Mailbox;
+import Mail.Message;
+import Mail.MessageRequestToConfirm;
 import Vacation.Vacation;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,17 +17,25 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
+import Model.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class MyVacationsController {
-    private Parent root;
     public javafx.scene.control.Button closeButton;
     public javafx.scene.control.Button filter;
     public DatePicker departure_datePicker;
     private Group group=null;
     private int height=70;
+    private Parent root;
+    private boolean toTrade;
+    private Object offeredVacation;
+
+    public void setMyModel(ModelInt myModel) {
+        this.myModel = myModel;
+    }
+
+    private ModelInt myModel;
 
     public Stage getStage() {
         return stage;
@@ -32,8 +43,7 @@ public class MyVacationsController {
 
     private Stage stage;
 
-    public void closeButtonAction(ActionEvent actionEvent) {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
+    public void closeButtonAction() {
         stage.close();
     }
 
@@ -56,8 +66,12 @@ public class MyVacationsController {
             }
         });
         if(group!=null) {
-            group.getChildren().add( sc );
-            Scene scene = new Scene( group );
+            ScrollPane sp= new ScrollPane(  );
+            Button exit=getExitButton();
+            group=new Group( group,exit );
+            group.getStylesheets().add("/View/MyStyle.css");
+            sp.setContent( group );
+            Scene scene = new Scene( sp );
             stage.setScene( scene );
         }
         else{
@@ -67,6 +81,11 @@ public class MyVacationsController {
 
 
     }
+    private Button getExitButton() {
+        Button Exit = new Button( "exit" );
+        Exit.setOnAction( e->closeButtonAction() );
+        return Exit;
+    }
     public void setVacations(String username) {
         VacationTable table = new VacationTable();
         ArrayList<Vacation> vacations = table.getMyVacations( username );
@@ -75,6 +94,8 @@ public class MyVacationsController {
 
     private void addVacation(Vacation v) {
         Label parameters=new Label( v.toString() );
+        Button chooseToTrade=new Button( "choose vacation" );
+        chooseToTrade.setOnAction( e->tradeVacations(v) );
         HBox hb= new HBox(  );
         hb.setSpacing( 10 );
         hb.setMargin( parameters, new Insets(20, 20, 20, 20) );
@@ -82,7 +103,10 @@ public class MyVacationsController {
         hb.setLayoutY( height );
         hb.setPrefWidth( 750 );
         ObservableList list = hb.getChildren();
-        list.addAll(parameters );
+        if(toTrade)
+            list.addAll(parameters,chooseToTrade );
+        else
+            list.addAll(parameters );
         height+=120;
         if(group==null){
             group=new Group(root, hb );
@@ -93,8 +117,20 @@ public class MyVacationsController {
 
     }
 
-    public void setStage(Stage stage, Parent root) {
+    private void tradeVacations(Vacation trade) {
+        myModel.setVacationToTrade(trade);
+        Mailbox mailbox = Mailbox.recreateMailBox( myModel.getUser() );
+        Message message = new MessageRequestToConfirm( myModel.getVacation(),myModel.getVacationToTrade() );
+        mailbox.sendMessage( message, myModel.getVacation().getSeller() );
+    }
+
+    public void setStage(Stage stage,Parent root) {
         this.stage=stage;
         this.root=root;
+    }
+
+    public void setToTrade(boolean b,Vacation v ){
+        this.toTrade=b;
+        this.offeredVacation=v;
     }
 }
