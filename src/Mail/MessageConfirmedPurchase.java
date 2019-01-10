@@ -9,15 +9,32 @@ import java.util.List;
 
 public class MessageConfirmedPurchase extends Message{
 
+    /**
+     * vacation confirming sale of
+     */
     private Vacation vacation;
     private String seller;
     private String buyer;
 
+    /**
+     * constructor to recreate from text in database
+     * @param isRead
+     * @param savedText
+     * @param usernameFrom
+     * @param usernameTo
+     * @param id
+     */
     MessageConfirmedPurchase(boolean isRead, String savedText, String usernameFrom, String usernameTo, int id) {
         super(isRead, savedText, usernameFrom, usernameTo, id);
         setTextFromSavedText(savedText);
     }
 
+    /**
+     * confirmation of transaction
+     * @param vacation
+     * @param type
+     * @param buyer
+     */
     public MessageConfirmedPurchase(Vacation vacation, Type type, String buyer) {
         super();
         this.vacation=vacation;
@@ -26,6 +43,9 @@ public class MessageConfirmedPurchase extends Message{
         setText(type);
     }
 
+    /**
+     * confirmation of message
+     */
     public enum Type{
         COMPLETEDTRANSACTION, FLIGHTNOTAVAILABLE,UNABLETOCOMPLETEPURCHASE, USERREGECTED
     }
@@ -34,6 +54,11 @@ public class MessageConfirmedPurchase extends Message{
     public String getType(){
         return "confirmation_message";
     }
+
+    /**
+     * set text according to type of message
+     * @param type
+     */
     private void setText(Type type){
         String text=null;
         switch (type){
