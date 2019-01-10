@@ -6,7 +6,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class VacationTable extends Adb {
-
+    /**
+     * select all vacation by departue date
+     * @param departureTime
+     * @param backLaunchTime
+     * @return
+     */
     public ArrayList<Vacation> selectByDatesWithBackFlights(Date departureTime, Date backLaunchTime) {
         ArrayList<Vacation> vacationsArrayList = new ArrayList<>();
         String sql;
@@ -50,6 +55,12 @@ public class VacationTable extends Adb {
         }
         return vacationsArrayList;
     }
+
+    /**
+     * insert a new vacation to the db
+     * @param vacationToDB
+     * @return
+     */
     public boolean InsertCommand(Vacation vacationToDB) {
         boolean success = false;
         String sqlCommand = "INSERT INTO vacations(vacationID,seller,aviationCompany,departureTime,launchTime," +
@@ -85,6 +96,13 @@ public class VacationTable extends Adb {
         }
         return success;
     }
+
+    /**
+     * update a vacation availabilty
+     * @param vacID
+     * @param update
+     * @return
+     */
     public boolean updateAvailable(int vacID, int update) {
         String sqlCommand = "UPDATE vacations SET avalible = ? WHERE vacationID = ?;";
         try (Connection conn = this.connect();
@@ -98,6 +116,12 @@ public class VacationTable extends Adb {
         }
         return true;
     }
+
+    /**
+     * delete a vacation from the db
+     * @param vacID
+     * @return
+     */
     public boolean deletCommand(int vacID) {
         String sqlCommand = "DELETE FROM vacations WHERE vacationID = ?;";
         try (Connection conn = this.connect();
@@ -110,6 +134,11 @@ public class VacationTable extends Adb {
         }
         return true;
     }
+
+    /**
+     * get all available vacations from the db
+     * @return
+     */
     public ArrayList<Vacation> getAllAvailableVacations(){
         ArrayList<Vacation>  res = new ArrayList<Vacation>();
         String sql;
@@ -144,6 +173,12 @@ public class VacationTable extends Adb {
 
         return res;
     }
+
+    /**
+     * get al user available vacations from the db
+     * @param registeredUerName
+     * @return
+     */
     public ArrayList<Vacation> getAllAvailableVacations(String registeredUerName){
         ArrayList<Vacation>  res = new ArrayList<Vacation>();
         String sql;
@@ -178,6 +213,12 @@ public class VacationTable extends Adb {
 
         return res;
     }
+
+    /**
+     * get all user vacations from the db
+     * @param userName
+     * @return
+     */
     public ArrayList<Vacation> getMyVacations(String userName){
         ArrayList<Vacation>  res = new ArrayList<Vacation>();
         String sql;

@@ -27,6 +27,11 @@ public class CreateUserController {
     public javafx.scene.control.DatePicker BD;
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+    /**
+     * create a new user with the user inputs
+     * @param actionEvent
+     */
     public void createUser(ActionEvent actionEvent) {
         //initialize all objects to be used later
         boolean success = false;
@@ -73,6 +78,16 @@ public class CreateUserController {
 
     }
 
+    /**
+     * check the user inserted inputs and send an alert if there are some wrong input
+     * @param userName
+     * @param password
+     * @param email
+     * @param date
+     * @param firstName
+     * @param lastName
+     * @return
+     */
     private boolean checkInputs(String userName, String password, String email, String date, String firstName, String lastName) {
         Alert result=new Alert( Alert.AlertType.WARNING );
         result.setTitle( "wrong input" );
@@ -108,11 +123,21 @@ public class CreateUserController {
         }
         return true;
     }
+
+    /**
+     * check an email input
+     * @param email
+     * @return
+     */
     private boolean validateEmail(String email){
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
         return matcher.find();
     }
 
+    /**
+     * close the current stage
+     * @param actionEvent
+     */
     public void closeButtonAction(ActionEvent actionEvent) {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();

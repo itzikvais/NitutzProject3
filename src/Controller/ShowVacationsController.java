@@ -50,7 +50,7 @@ public class ShowVacationsController {
     private User user;
     private ShowVacationsController controller;
     private boolean filt;
-
+    // set the controler model
     public void setMyModel(ModelInt myModel) {
         this.myModel = myModel;
     }
@@ -62,6 +62,11 @@ public class ShowVacationsController {
     }
 
     private Stage stage;
+
+    /**
+     * filter the vacations by departure time
+     * @param actionEvent
+     */
     public void filter(ActionEvent actionEvent) {
         filter.setDisable(true);
         try{
@@ -90,27 +95,22 @@ public class ShowVacationsController {
         filter.setDisable(false);
     }
 
+    /**
+     * set the controler who created this controle
+      */
     private void setController(ShowVacationsController svc) {
         controller=svc;
     }
-
-    public void filterByDate(){
-        java.sql.Date departure = java.sql.Date.valueOf(departure_datePicker.getValue());
-        boolean result =false;
-        if(!result){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Yakir learn GUI");
-            alert.setContentText("content");
-            alert.showAndWait();
-            return;
-        }
-
-    }
+    // close the specific window
     public void closeButtonAction(ActionEvent actionEvent) {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * show all the choosed vacations
+     * @param vacations
+     */
     public void setVacations(Collection<Vacation> vacations){
         if(filt) {
             height=70;
@@ -149,6 +149,10 @@ public class ShowVacationsController {
         }
 
     }
+
+    /**
+     * get all the available vacations
+     */
     public void setVacations() {
         VacationTable table = new VacationTable();
         ArrayList<Vacation> vacations=null;
@@ -159,6 +163,10 @@ public class ShowVacationsController {
         setVacations(vacations);
     }
 
+    /**
+     * add a specific vacation to the vacations group
+     * @param v
+     */
     private void addVacation(Vacation v) {
         Label parameters=new Label( v.toString() );
         Button vacations = new Button("buy vacation");
@@ -194,6 +202,13 @@ public class ShowVacationsController {
 
     }
 
+    /**
+     * open a myvacation after pushing the trade button
+     * @param vacation
+     * @param buy
+     * @param trade
+     * @return
+     */
     private MyVacationsController tradeVacations(Vacation vacation, Button buy, Button trade) {
         if(myModel.getUser()==null){
             Alert alert=new Alert( Alert.AlertType.WARNING );
@@ -232,6 +247,10 @@ public class ShowVacationsController {
         return null;
     }
 
+    /**nt if a connected user pushed the buy vacation button
+     * create a payme
+     * @param vacation
+     */
     private void payment(Vacation vacation) {
         if(myModel.getUser()==null){
             Alert alert=new Alert( Alert.AlertType.WARNING );
@@ -251,10 +270,18 @@ public class ShowVacationsController {
         this.root=root;
     }
 
+    /**
+     * set the current loged in user
+     * @param user
+     */
     public void setUser(User user) {
         this.user=user;
     }
 
+    /**
+     * filter the vacations by date
+     * @param actionEvent
+     */
     public void filterVacations(ActionEvent actionEvent) {
         String departue="";
         String launchBack="";
@@ -268,7 +295,7 @@ public class ShowVacationsController {
             controller.setVacations( vac );
         }
     }
-
+    // send a purchase offer to the seller
     public void sendRequest() {
         Mailbox mailbox = Mailbox.recreateMailBox( myModel.getUser() );
         Message message = new MessageRequestToConfirm( myModel.getVacation() );

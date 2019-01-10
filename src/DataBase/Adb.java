@@ -4,6 +4,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public abstract class Adb {
+    /**
+     * @return a database connection
+     */
     public Connection connect() {
         // SQLite connection string
         Connection conn = null;
@@ -14,6 +17,13 @@ public abstract class Adb {
         }
         return conn;
     }
+
+    /**
+     * implements a generic insert command with all inputs that are string
+     * @param query
+     * @param fields
+     * @return
+     */
     public boolean InsertComand(String query,String[] fields ){
         boolean success = false;
         try (Connection conn = this.connect();
@@ -28,6 +38,13 @@ public abstract class Adb {
         }
         return success;
     }
+
+    /**
+     * implements a generic select command where all fields are string type
+     * @param query
+     * @param wantedColumn
+     * @return
+     */
     public ArrayList<String> selectCommand(String query, String[] wantedColumn){
         String record = null;
         ArrayList<String> records=new ArrayList<>(  );
@@ -47,6 +64,12 @@ public abstract class Adb {
         }
         return records;
     }
+
+    /**
+     * implement a generic integer select commands where all fileds are integers
+     * @param wantedColumn
+     * @return
+     */
     public int selectIntCommand(String wantedColumn){
         String query="SELECT vacationID,messageID FROM ids";
         String record = "";
@@ -118,6 +141,13 @@ public abstract class Adb {
         }
         return true;
     }
+
+    /**
+     * implement a generic update command where all inputs are string
+     * @param update
+     * @param newValue
+     * @return
+     */
     public boolean updateInt(String update, int newValue) {
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(update)) {

@@ -47,6 +47,9 @@ public class Controller implements Observer {
         createButtons();
     }
 
+    /**
+     * create the new buttons if a user is logged in
+     */
     private void createButtons() {
         logout = new Button("Logout");
         logout.setOnAction( e -> logout(  ) );
@@ -75,6 +78,9 @@ public class Controller implements Observer {
         mailbox.setLayoutY(20);
     }
 
+    /**
+     * open the my vacation view
+     */
     private void myVacations() {
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/MyVacation.fxml"));
@@ -99,6 +105,9 @@ public class Controller implements Observer {
 
     }
 
+    /**
+     * open the add vacation view
+     */
     private void addVacation() {
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/AddVacation.fxml"));
@@ -123,6 +132,9 @@ public class Controller implements Observer {
         }
     }
 
+    /**
+     * log out a user
+     */
     private void logout() {
         isConnected=false;
         myModel.setUser(null);
@@ -133,6 +145,10 @@ public class Controller implements Observer {
         primaryStage.show();
     }
 
+    /**
+     * resize the window
+     * @param scene
+     */
     public void setResizeEvent(Scene scene) {
         scene.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -161,6 +177,10 @@ public class Controller implements Observer {
         }
 
     }
+
+    /**
+     * open the login view
+     */
     public void login(){
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
@@ -183,6 +203,10 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
     }
+
+    /**
+     * open the create user view
+     */
     public void register(){
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/CreateUser.fxml"));
@@ -203,6 +227,10 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
     }
+
+    /**
+     * open the update user view for a logged in user
+     */
     public void updateUser(){
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/UpdateUser.fxml"));
@@ -226,6 +254,10 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
     }
+
+    /**
+     * open the show vacation view
+     */
     public void showVacations() {
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/ShowVacations.fxml"));
@@ -252,6 +284,14 @@ public class Controller implements Observer {
         }
     }
 
+    /**
+     * set the fxml objects from the main
+     * @param image
+     * @param register
+     * @param login
+     * @param root
+     * @param vacations
+     */
     public void setUIObjects(ImageView image,Button register, Button login, Parent root, Button vacations) {
         this.image=image;
         this.register=register;
@@ -260,14 +300,26 @@ public class Controller implements Observer {
         showVacations=vacations;
     }
 
+    /**
+     * set the controller model
+     * @param model
+     */
     public void setModel(Model model) {
         myModel=model;
     }
 
+    /**
+     * get the current stage
+     * @param primaryStage
+     */
     public void setStage(Stage primaryStage) {
         this.primaryStage=primaryStage;
     }
 
+    /**
+     * show an exit message
+     * @param actionEvent
+     */
     public void exit(ActionEvent actionEvent) {
         showExitMessage();
     }
@@ -276,11 +328,19 @@ public class Controller implements Observer {
         Optional<ButtonType> result = exit.showAndWait();
 
     }
+
+    /**
+     * close the stage if the close button pressed
+     * @param actionEvent
+     */
     public void closeButtonAction(ActionEvent actionEvent) {
         //Stage stage = (Stage) closeButton.getScene().getWindow();
         primaryStage.close();
     }
 
+    /**
+     * get the current user mailbox
+     */
     public void getMailBox() {
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/MailBox.fxml"));

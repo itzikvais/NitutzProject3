@@ -28,6 +28,11 @@ public class TransactionTable extends Adb {
         //time = transaction.getDateUnixTime();
     }
 
+    /**
+     * insert a new transaction tp the db
+     * @param transaction
+     * @return
+     */
     public boolean insert(Transaction transaction){
         String sBuyerUserName = transaction.getBuyer().getUsername();
         String sSellerUserName = transaction.getSeller().getUsername();
@@ -49,9 +54,16 @@ public class TransactionTable extends Adb {
         }
         return false;
     }
+    // an empty constructor
     public TransactionTable(){
 
     }
+
+    /**
+     * get all transaction from the db
+     * @param user
+     * @return
+     */
     public List<Transaction> getAllTransactions(User user){
         String querry = "SELECT buyerUserName,sellerUserName,vacationID,time,payment FROM transactions WHERE buyerUserName=? OR sellerUserName=?";
         try (Connection conn = this.connect();
@@ -69,6 +81,12 @@ public class TransactionTable extends Adb {
         return null;
     }
 
+    /**
+     * get all the transaction from the resultset
+     * @param rs
+     * @return
+     * @throws SQLException
+     */
     private List<Transaction> getTransactionListFromResultSet(ResultSet rs) throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
         while (rs.next()) {
@@ -82,6 +100,10 @@ public class TransactionTable extends Adb {
         return transactions;
     }
 
+    /**
+     * delete a transaction from the db
+     * @param t
+     */
     public void cancelTransaction(Transaction t){
         String delete = "DELETE FROM transactions WHERE buyerUserName=? AND sellerUserName=? AND vacationID=?";
         try (Connection conn = this.connect();
@@ -95,6 +117,14 @@ public class TransactionTable extends Adb {
             System.out.println(e.getMessage());
         }
     }
+
+    /**
+     * get all vacations by the publisher username
+     * @param userName
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     private List<Vacation> getAllVacations(String userName,ResultSet resultSet) throws SQLException {
         List<Vacation> vacations = new ArrayList<>();
         while (resultSet.next()){
@@ -104,6 +134,12 @@ public class TransactionTable extends Adb {
         return vacations;
     }
 
+    /**
+     * get all vacations from the db
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     private List<Vacation> getAllVacations(ResultSet resultSet) throws SQLException {
         List<Vacation> vacations = new ArrayList<>();
         while (resultSet.next()){
@@ -112,6 +148,7 @@ public class TransactionTable extends Adb {
         }
         return vacations;
     }
+    /* getters */
     public List<Vacation> getAllVacationsSold(String userName){
         String query = "SELECT vacationID FROM transactions WHERE sellerUserName=?";
         try (Connection conn = this.connect();

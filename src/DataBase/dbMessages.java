@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class dbMessages extends Adb {
-
+    // insert a new message to the db
     public boolean insertToDataBase(Message message){
         int messageID = message.getId();
         int isRead = message.isRead() ? 1 : 0;
@@ -36,6 +36,11 @@ public class dbMessages extends Adb {
         return false;
     }
 
+    /**
+     * update a message in the database
+     * @param message
+     * @return true if the update succes
+     */
     public boolean updateInDataBase(Message message){
         int messageID = message.getId();
         int isRead = message.isRead() ? 1 : 0;
@@ -62,6 +67,11 @@ public class dbMessages extends Adb {
         return false;
     }
 
+    /**
+     * get all user recieved messages by username
+     * @param userNameReceived
+     * @return
+     */
     public List<Message> getAllReceived(String userNameReceived){
         String query = "SELECT messageID,isRead,messageType,userNameFrom," +
                 "userNameTo,messageText FROM messages WHERE usernameTo=?";

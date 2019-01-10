@@ -25,12 +25,28 @@ public class Vacation implements Comparable<Vacation> {
 
     private boolean isAvalible;
 
+    /**
+     * create a new vacation on the DB with the user inputs
+     * @param sellerName
+     * @param aviationCompany
+     * @param departureTime
+     * @param launchTime
+     * @param backDepartureTime
+     * @param backLaunchTime
+     * @param baggage
+     * @param tickets
+     * @param fromCountry
+     * @param destinationCountry
+     * @param ticketType
+     * @param price
+     */
     public Vacation(String sellerName, String aviationCompany, Date departureTime, Date launchTime,
                     Date backDepartureTime, Date backLaunchTime, int baggage, int tickets,
                     String fromCountry, String destinationCountry, String ticketType, double price) {
         VacationTable vte = new VacationTable();
         this.vacationID = (Math.random()*Integer.MAX_VALUE+ "").hashCode();
-        vte.updateInt("UPDATE ids SET vacationID = ?",vacationID+1);
+        if(this.vacationID<0)
+            this.vacationID=this.vacationID*-1;
         this.sellerName = sellerName;
         this.aviationCompany = aviationCompany;
         this.departureTime = departureTime;
@@ -48,6 +64,24 @@ public class Vacation implements Comparable<Vacation> {
         //add to dataBase
         vte.InsertCommand(this);
     }
+
+    /**
+     * create a new vacation on the DB with the user inputs
+     * @param vacationID
+     * @param sellerName
+     * @param aviationCompany
+     * @param departureTime
+     * @param launchTime
+     * @param backDepartureTime
+     * @param backLaunchTime
+     * @param baggage
+     * @param tickets
+     * @param fromCountry
+     * @param destinationCountry
+     * @param ticketType
+     * @param price
+     * @param isAvalible
+     */
     public Vacation(int vacationID, String sellerName, String aviationCompany, Date departureTime, Date launchTime,
                     Date backDepartureTime, Date backLaunchTime, int baggage, int tickets,
                     String fromCountry, String destinationCountry, String ticketType, double price, int isAvalible){
@@ -108,6 +142,10 @@ public class Vacation implements Comparable<Vacation> {
         }
     }
 
+    /**
+     * get a vacation from the db by the vacation id
+     * @param vacationID
+     */
     public Vacation(int vacationID) {
         VacationTable vacationTableEntry = new VacationTable();
         String querry = "SELECT vacationID,seller,aviationCompany,departureTime,launchTime,backDepartureTime,backLaunchTime,baggage,tickets,fromCountry,destinationCountry,ticketType,price,avalible FROM vacations WHERE  vacationID = ?;";
@@ -144,14 +182,18 @@ public class Vacation implements Comparable<Vacation> {
         return vacationID;
     }
 
+    /**
+     * get the vacation seller
+     * @return
+     */
     public String getSeller() {
         return sellerName;
     }
-
+    //get the vacation avaition company
     public String getAviationCompany() {
         return aviationCompany;
     }
-
+    //get the vacation departure time
     public Date getDepartureTime() {
         return departureTime;
     }
@@ -176,22 +218,41 @@ public class Vacation implements Comparable<Vacation> {
         return tickets;
     }
 
+    /**
+     * get flight country source
+     * @return
+     */
     public String getFromCountry() {
         return fromCountry;
     }
 
+    /**
+     * get flight country destination
+     * @return
+     */
     public String getDestinationCountry() {
         return destinationCountry;
     }
 
+    /**
+     * get vacation tickets type
+     * @return
+     */
     public String getTicketType() {
         return ticketType;
     }
 
+    /**
+     * get vacation price
+     * @return
+     */
     public double getPrice() {
         return price;
     }
 
+    /**
+     * @return true of a vacation is available
+     */
     public boolean isAvalible() {
         Date now = Date.valueOf(LocalDate.now());
         isAvalible = (isAvalible && !(now.after(departureTime)));

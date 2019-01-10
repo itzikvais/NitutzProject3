@@ -41,9 +41,15 @@ public class UpdateUserController {
     public void setModel(ModelInt model) {
         this.model = model;
     }
+    //set the current logged in user
     public void setUser(User user){
         this.user=user;
     }
+
+    /**
+     * get the updated user parameters
+     * @param user
+     */
     public void setText(User user){
         this.user=user;
         txtfld_email.setText( user.getEmail() );
@@ -70,7 +76,7 @@ public class UpdateUserController {
         }
 
     }
-
+    //open an update password view
     public void updatePassword(ActionEvent actionEvent) {
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/UpdatePassword.fxml"));
@@ -94,6 +100,7 @@ public class UpdateUserController {
             e.printStackTrace();
         }
     }
+    // check the user inputs
     private boolean checkInputs(String email, String date, String firstName, String lastName) {
         Alert result=new Alert( Alert.AlertType.WARNING );
         result.setTitle( "wrong input" );
@@ -119,11 +126,19 @@ public class UpdateUserController {
         }
         return true;
     }
+
+    /**
+     *  validate email input
+      */
     private boolean validateEmail(String email){
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(email);
         return matcher.find();
     }
 
+    /**
+     * update a password and check user inputs
+     * @param actionEvent
+     */
     public void updatePas(ActionEvent actionEvent) {
         String oldPass=txtfld_oldPass.getText();
         String newPass=txtfld_password.getText();
@@ -132,9 +147,9 @@ public class UpdateUserController {
             result.setContentText( "please enter an old password" );
             result.showAndWait();
         }
-        else if(newPass.length()<1){
+        else if(newPass.length()<4){
             Alert result= new Alert( Alert.AlertType.WARNING );
-            result.setContentText( "please enter a new password" );
+            result.setContentText( "a password must contain at least 4 characters!" );
             result.showAndWait();
         }
         else {

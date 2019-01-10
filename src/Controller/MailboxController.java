@@ -44,16 +44,29 @@ public class MailboxController {
         //this.userName = userName;
     }
 
+    /**
+     * set the logged on user username
+     * @param userName
+     */
     public void setUserName(String userName){
         this.userName = userName;
     }
     public void closeButtonAction() {
         stage.close();
     }
+
+    /**
+     * get the user mailbox from the db
+     */
     public void setMessages(){
         mailbox = Mailbox.recreateMailBox(new User(userName));
         setMessages(mailbox.getMessages());
     }
+
+    /**
+     * show all the user messages on the mailbox window
+     * @param messages
+     */
     public void setMessages(Collection<Message> messages){
         if(p==null && (messages==null || messages.isEmpty()))
             return;
@@ -89,7 +102,7 @@ public class MailboxController {
     public void setParent(Parent p){
         this.p=p;
     }
-
+    // add a message to the messages group
     private void addMessage(Message m) {
         javafx.scene.control.Label parameters=new javafx.scene.control.Label( m.getText() );
         javafx.scene.control.Button accept = new javafx.scene.control.Button("Accept Purchase");
@@ -137,6 +150,11 @@ public class MailboxController {
         }
     }
 
+    /**
+     * handle an accept or deny button
+     * @param b
+     * @param m
+     */
     private void handlePress(boolean b, MessageRequestToConfirm m) {
         m.confirm(b);
     }

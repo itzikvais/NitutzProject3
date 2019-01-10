@@ -26,15 +26,23 @@ public class AddVacationController {
     public javafx.scene.control.TextField ticketType;
     public javafx.scene.control.TextField price;
     private User user;
-
+    //closing the current stage
     public void closeButtonAction(ActionEvent actionEvent) {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * set the current login user
+      */
     public void setUser(User user){
         this.user=user;
     }
+
+    /**
+     * check the vacation input and create new vacation if the inputs are valid
+     * @param actionEvent
+     */
     public void addVacation(ActionEvent actionEvent) {
         String username=user.getUsername();
         String aviationComp=aviation.getText();
@@ -73,6 +81,11 @@ public class AddVacationController {
             stage.close();
         }
     }
+
+    /**
+     * @param num
+     * @return true if a string is a number
+     */
     private boolean isInteger(String num){
         try{
             Integer.parseInt( num );
@@ -82,6 +95,9 @@ public class AddVacationController {
         }
         return true;
     }
+    /**
+     * @return true if a string is a time
+     */
     private boolean isTime(String time){
         try {
             String number="";
@@ -106,6 +122,9 @@ public class AddVacationController {
         }
         return true;
     }
+    /**
+     * @return true if a string is a double
+     */
     private boolean isIDouble(String num){
         try{
             Double.parseDouble( num );

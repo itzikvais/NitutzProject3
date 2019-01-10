@@ -11,6 +11,11 @@ public class LoginUserController {
     public javafx.scene.control.Button closeButton;
     public javafx.scene.control.TextField txtfld_user_name;
     public javafx.scene.control.TextField txtfld_password;
+
+    /**
+     * login to a user if the username and password are matched
+     * @param actionEvent
+     */
     public void login(ActionEvent actionEvent) {
         boolean success = false;
         String userName=txtfld_user_name.getText();
@@ -38,6 +43,12 @@ public class LoginUserController {
 
     }
 
+    /**
+     * check the user inputs and send an alerts if there are wrong inputs
+     * @param userName
+     * @param password
+     * @return
+     */
     private boolean checkInputs(String userName, String password) {
         Alert result=new Alert( Alert.AlertType.WARNING );
         result.setTitle( "wrong input" );
@@ -53,7 +64,7 @@ public class LoginUserController {
         }
         return true;
     }
-
+    // close the current stage
     public void closeButtonAction(ActionEvent actionEvent) {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();

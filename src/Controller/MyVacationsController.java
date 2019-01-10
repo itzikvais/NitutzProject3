@@ -33,6 +33,10 @@ public class MyVacationsController {
     private Button buy;
     private Button trade;
 
+    /**
+     * set the controler model
+     * @param myModel
+     */
     public void setMyModel(ModelInt myModel) {
         this.myModel = myModel;
     }
@@ -44,13 +48,19 @@ public class MyVacationsController {
     }
 
     private Stage stage;
-
+    // close the current stage
     public void closeButtonAction() {
-        buy.setDisable( false );
-        trade.setDisable( false );
+        if(buy!=null&&trade!=null) {
+            buy.setDisable( false );
+            trade.setDisable( false );
+        }
         stage.close();
     }
 
+    /**
+     * show the user vacations
+     * @param vacations a collection of all user vacations
+     */
     public void setVacations(Collection<Vacation> vacations){
         for (Vacation v:vacations) {
             addVacation(v);
@@ -85,17 +95,23 @@ public class MyVacationsController {
 
 
     }
+    // create an exit button
     private Button getExitButton() {
         Button Exit = new Button( "exit" );
         Exit.setOnAction( e->closeButtonAction() );
         return Exit;
     }
+
+    /**
+     * get the available user vacations from the DB
+     * @param username
+     */
     public void setVacations(String username) {
         VacationTable table = new VacationTable();
         ArrayList<Vacation> vacations = table.getMyVacations( username );
         setVacations(vacations);
     }
-
+    // add a specific vacation to the group
     private void addVacation(Vacation v) {
         Label parameters=new Label( v.toString() );
         Button chooseToTrade=new Button( "choose vacation" );
@@ -121,6 +137,10 @@ public class MyVacationsController {
 
     }
 
+    /**
+     * send the current offer to the model and sen a message to the seller
+     * @param trade
+     */
     private void tradeVacations(Vacation trade) {
         myModel.setVacationToTrade(trade);
         Mailbox mailbox = Mailbox.recreateMailBox( myModel.getUser() );
@@ -131,17 +151,22 @@ public class MyVacationsController {
         alert.showAndWait();
         stage.close();
     }
-
+    //set the current stage
     public void setStage(Stage stage,Parent root) {
         this.stage=stage;
         this.root=root;
     }
 
+    /**
+     * set a vacation to trade
+     * @param b
+     * @param v
+     */
     public void setToTrade(boolean b,Vacation v ){
         this.toTrade=b;
         this.offeredVacation=v;
     }
-
+    //set a buttons if this is a trade window
     public void setButtons(Button buy, Button trade) {
         this.buy=buy;
         this.trade =trade;
