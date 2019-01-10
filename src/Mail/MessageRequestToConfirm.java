@@ -10,7 +10,13 @@ import java.util.List;
 
 public class MessageRequestToConfirm extends Message{
 
+    /**
+     * vacation to confirm
+     */
     Vacation vacationToConfirm;
+    /**
+     * vacation to trade, null if no such
+     */
     Vacation vacationToTrade;
 
 
@@ -23,17 +29,31 @@ public class MessageRequestToConfirm extends Message{
         super(id);
         this.vacationToConfirm = vacation;
     }
+
+    /**
+     * create message from vacation
+     * @param vacation
+     */
     public MessageRequestToConfirm(Vacation vacation){
         super();
         this.vacationToConfirm = vacation;
         isRead=false;
     }
 
+    /**
+     * create message from vacation
+     * @param vacation
+     * @param vacationToTrade
+     */
     public MessageRequestToConfirm(Vacation vacation, Vacation vacationToTrade) {
         this(vacation);
         this.vacationToTrade=vacationToTrade;
     }
 
+    /**
+     * get type of message to send after attempt to purchase
+     * @return
+     */
     private MessageConfirmedPurchase.Type accept(){
         if(vacationToConfirm.isAvalible()){
             boolean isCash = vacationToTrade==null;
@@ -51,6 +71,10 @@ public class MessageRequestToConfirm extends Message{
             return MessageConfirmedPurchase.Type.FLIGHTNOTAVAILABLE;
     }
 
+    /**
+     * confirm or deny message
+     * @param action
+     */
     public void confirm(boolean action){
         isRead=true;
         MessageConfirmedPurchase.Type type;
