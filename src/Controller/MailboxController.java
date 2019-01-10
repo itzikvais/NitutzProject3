@@ -28,6 +28,7 @@ public class MailboxController {
     private Group group=null;
     private int height=70;
     private Parent p;
+    public boolean isEmpty;
 
     public Stage getStage() {
         return stage;
@@ -46,7 +47,6 @@ public class MailboxController {
     public void setUserName(String userName){
         this.userName = userName;
     }
-
     public void closeButtonAction() {
         stage.close();
     }
@@ -69,16 +69,15 @@ public class MailboxController {
             sp.setContent(group);
             sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
             scene = new Scene(sp,1000,800);
+            stage.setScene( scene );
 
         }
         else {
-            ScrollPane sp= new ScrollPane(  );
-            Button exit=getExitButton();
-            group=new Group(exit);
-            group.getStylesheets().add("/View/MyStyle.css");
-            scene = new Scene(group );
+            Alert alert=new Alert( Alert.AlertType.INFORMATION );
+            alert.setContentText( "your mailbox is empty!" );
+            alert.showAndWait();
+            isEmpty=true;
         }
-        stage.setScene( scene );
     }
 
     private Button getExitButton() {
@@ -147,7 +146,7 @@ public class MailboxController {
         this.group=null;
         setMessages(mailbox.getMessages());
     }
-    public void setStage(Stage stage) {
-        this.stage=stage;
+    public void setStage(Stage stage,Parent root) {
+        this.stage=stage;this.root=root;
     }
 }

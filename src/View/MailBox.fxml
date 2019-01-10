@@ -6,7 +6,6 @@
 
 <ScrollPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MailboxController">
         <Button fx:id="closeButton" onAction="#closeButtonAction" />
-      <Button fx:id="reloadButton" layoutX="976.0" layoutY="8.0" onAction="#closeButtonAction" text="Reload" />
 
 
 </ScrollPane>
