@@ -85,6 +85,7 @@ public class MessageRequestToConfirm extends Message{
         }
         else if(vacationToTrade==null) {
             return "User: "+getUserNameFrom()+" wants to purchase vacation:" + vacationToConfirm.getVacationID()+"\n" +
+                    "Please Contact the user at their email address: " + getFromUser().getEmail() + ".\nPlease Confirm once you have received the money,\nor deny if you are not interested\n"+
                     "Choose your response";
         }
         else{
